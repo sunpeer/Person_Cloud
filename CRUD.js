@@ -7,7 +7,7 @@ function updateOpr(table_name,key_values,index,connection,cb){
 }
 
 function queryByIndex(table_name,query_key,index,connection,cb){
-    connection.query(`select ? from ${table_name} where id=${index}`,query_key,cb)
+    connection.query(`select ?? from ${table_name} where id=${index}`,[query_key],cb)
 }
 
 function queryBycondition(data,table_name,condition,connection,cb){
