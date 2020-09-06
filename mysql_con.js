@@ -4,6 +4,7 @@ const pool = mysql.createPool({
     host:'localhost',
     user:'root',
     password:'123456',
+    // database:'person_cloud_database'
     database:'person_cloud_database'
 });
 
