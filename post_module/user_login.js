@@ -16,10 +16,11 @@ module.exports=async (req,res)=>{
         oaepHash:"sha256"
     },req.body.pwd).toString()
     try{
-        let result=await getData(req.id,query.getUserById)
+        let result=await getData(req.body.id,query.getUserById)
         //成功登录
         if(result.pwd==pwd){
             console.log('[OK]', decodeURIComponent(req.originalUrl))
+            res.append('Set-Cookie', `loginId=${req.body.id};isLogin=true`)
             res.send({result:'OK',data:{
                 id:result.id,
                 name:result.name,
@@ -35,7 +36,7 @@ module.exports=async (req,res)=>{
         }
     }catch(error){
         //查询数据库出错
-        console.log('[ERR]', decodeURIComponent(req.originalUrl),error)
+        console.log('[ERR]', decodeURIComponent(req.originalUrl),req.body,error)
         res.status(500).send({result:'NG'})
     }
 }

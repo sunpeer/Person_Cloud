@@ -2,6 +2,7 @@ const query=require('../query')
 const crypto=require('crypto')
 const getData=require('../getdata')
 
+//admin登录
 //获得admin的数据
 module.exports=async (req,res)=>{
     // //检查cookie
@@ -16,7 +17,7 @@ module.exports=async (req,res)=>{
         oaepHash:"sha256"
     },req.body.pwd).toString()
     try{
-        let result=await getData(req.id,query.getAdminById)
+        let result=await getData(req.body.id,query.getAdminById)
         //成功登录
         if(result.pwd==pwd){
             console.log('[OK]', decodeURIComponent(req.originalUrl))
@@ -34,7 +35,7 @@ module.exports=async (req,res)=>{
         }
     }catch(error){
         //查询数据库出错
-        console.log('[ERR]', decodeURIComponent(req.originalUrl),error)
+        console.log('[ERR]', decodeURIComponent(req.originalUrl),req.body,error)
         res.status(500).send({result:'NG'})
     }
 }

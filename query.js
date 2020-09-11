@@ -126,7 +126,7 @@ async function getUserDownloadData(startId,count,downEvent){
 // getUserDownloadData(2,1,myEvent)
 
 //管理员获得work
-async function getAdminWork(downEvent){
+async function getAdminWork(count,downEvent){
     let connection;
     try{
         connection = await connectHandler() // 得到链接
@@ -136,7 +136,8 @@ async function getAdminWork(downEvent){
         downEvent.emit('error',eValue)
         return
     }
-    CRUD.queryBycondition('id','file_table','where is_available=false',connection,(error,results,fields)=>{
+    let limit=count===0?'':`limit ${count}`
+    CRUD.queryBycondition('id','file_table','where is_available=false order by `id` desc '+limit,connection,(error,results,fields)=>{
         if(error){
             console.error(`获得待审核创建文件Ids失败`)
             connection.release()
@@ -258,6 +259,59 @@ async function getFileByIds(ids,downEvent){
     })
 }
 
+async function getUserById(ids,downEvent){
+    let connection;
+    try{
+        connection = await connectHandler() // 得到链接
+    }catch(e){
+        console.error('连接数据库失败');
+        let {...eValue}=e
+        downEvent.emit('error',eValue)
+        return
+    }
+    CRUD.queryByIndex('user_table',['id','pwd','name','create_time','download_id','create_id','download_total','create_total'],ids,connection,(error,results,fields)=>{
+        if(error){
+            console.log(`获得id= ${ids}的用户信息失败`)
+            connection.release()
+            let {...eValue}=error
+            downEvent.emit('error',eValue)
+            return
+        }else{
+            connection.release()
+            let result=JSON.parse(JSON.stringify(results))[0]
+            let field=JSON.parse(JSON.stringify(fields))[0]
+            downEvent.emit('getDown',result,field)
+        }
+    })
+}
+
+
+async function getAdminById(ids,downEvent){
+    let connection;
+    try{
+        connection = await connectHandler() // 得到链接
+    }catch(e){
+        console.error('连接数据库失败');
+        let {...eValue}=e
+        downEvent.emit('error',eValue)
+        return
+    }
+    CRUD.queryByIndex('admin_table',['id','pwd','name','create_time','work_id','work_total'],ids,connection,(error,results,fields)=>{
+        if(error){
+            console.log(`获得id= ${ids}的管理员信息失败`)
+            connection.release()
+            let {...eValue}=error
+            downEvent.emit('error',eValue)
+            return
+        }else{
+            connection.release()
+            let result=JSON.parse(JSON.stringify(results))[0]
+            let field=JSON.parse(JSON.stringify(fields))[0]
+            downEvent.emit('getDown',result,field)
+        }
+    })
+}
+
 // let myEvent=new events.EventEmitter()
 // myEvent.on('getDown',datas=>{
 //     datas.forEach(data=>{
@@ -373,9 +427,6 @@ async function searchFileByType(type,downEvent){
     })
 }
 
-
-
-
 //按关键字
 async function searhFileByKey(keys,downEvent){
     let connection;
@@ -409,10 +460,6 @@ async function searhFileByKey(keys,downEvent){
     })
 }
 
-
-
-
-
 //首字母+文件类型
 async function searchFileByCT(Capital,Type,downEvent){
     let connection;
@@ -439,7 +486,6 @@ async function searchFileByCT(Capital,Type,downEvent){
         }
     })
 }
-
 
 //首字母+关键字
 async function searchFileByCK(Capital,keys,downEvent){
@@ -474,8 +520,6 @@ async function searchFileByCK(Capital,keys,downEvent){
     })
 }
 
-
-
 //文件类型+关键字
 async function searchFileByTK(Type,keys,downEvent){
     let connection;
@@ -508,7 +552,6 @@ async function searchFileByTK(Type,keys,downEvent){
         }
     })
 }
-
 
 //首字母+关键字+文件类型
 async function searchFileByCTK(Capital,Type,keys,downEvent){
@@ -543,17 +586,34 @@ async function searchFileByCTK(Capital,Type,keys,downEvent){
     })
 }
 
+// let myEvent=new events.EventEmitter()
+// myEvent.on('getDown',datas=>{
+//     console.log(datas)
+// }).on('error',value=>{
+//     console.log(value)
+// })
 
-let myEvent=new events.EventEmitter()
-myEvent.on('getDown',datas=>{
-    console.log(datas)
-}).on('error',value=>{
-    console.log(value)
-})
+// // searchFileByType('软件',myEvent)
+// // searhFileByKey(['JAVA','IDE'],myEvent)
+// // searchFileByCT('E','软件',myEvent)
+// // searchFileByCK('E',['JAVA'],myEvent)
+// // searchFileByTK('软件',['IDE'],myEvent)
+// searchFileByCTK('E','软件',['IDE'],myEvent)
 
-// searchFileByType('软件',myEvent)
-// searhFileByKey(['JAVA','IDE'],myEvent)
-// searchFileByCT('E','软件',myEvent)
-// searchFileByCK('E',['JAVA'],myEvent)
-// searchFileByTK('软件',['IDE'],myEvent)
-searchFileByCTK('E','软件',['IDE'],myEvent)
+module.exports={
+    searchFileByCTK,
+    searchFileByTK,
+    getUserCreationData,
+    getUserDownloadData,
+    getAdminWork,
+    getAdminDownWork,
+    searchFileByCK,
+    searchFileByCT,
+    searhFileByKey,
+    searchFileByType,
+    searchFile,
+    searchFileByCapital,
+    getFileByIds,
+    getUserById,
+    getAdminById
+}
