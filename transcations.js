@@ -2,13 +2,12 @@ const CRUD=require('./CRUD')
 const connectHandler=require('./mysql_con');
 const events=require('events')
 
-const test_json_for_create_transaction=require('./json_for_test/test_form_for_create_transaction.json');
-const test_json_for_modify_transaction=require('./json_for_test/test_form_for_modify_transaction.json')
-const test_json_for_download_transaction=require('./json_for_test/test_form_for_download_transaction.json')
-const test_json_for_create_admin_transaction=require('./json_for_test/test_form_for_create_admin_transaction.json')
-const test_json_for_create_user_transaction=require('./json_for_test/test_form_for_create_user_transaction.json');
-const test_json_for_create_confirm_transaction=require('./json_for_test/test_form_for_create_confirm_transaction.json')
-
+// const test_json_for_create_transaction=require('./json_for_test/test_form_for_create_transaction.json');
+// const test_json_for_modify_transaction=require('./json_for_test/test_form_for_modify_transaction.json')
+// const test_json_for_download_transaction=require('./json_for_test/test_form_for_download_transaction.json')
+// const test_json_for_create_admin_transaction=require('./json_for_test/test_form_for_create_admin_transaction.json')
+// const test_json_for_create_user_transaction=require('./json_for_test/test_form_for_create_user_transaction.json');
+// const test_json_for_create_confirm_transaction=require('./json_for_test/test_form_for_create_confirm_transaction.json')
 
 async function create_file_transcation(data,downEvent){
     let connection;
@@ -457,7 +456,7 @@ async function create_user_transaction(data,downEvent){
                     console.log('create user transcation 执行成功')
                     connection.release();
                     let {...result}=results;
-                    downEvent.emit('getDown',result,fields)
+                    downEvent.emit('getDown',result)
                 }
             })
         }
@@ -532,7 +531,6 @@ async function create_admin_transaction(data,downEvent){
             let {...eValue}=error
             downEvent.emit('error',eValue)
             return
-
             // console.log(Object.keys(error))
             // let {code,errno,sqlMessage,sqlState,index,sql}=error;
             // let {...errorData}=error
@@ -544,7 +542,7 @@ async function create_admin_transaction(data,downEvent){
             connection.release();
             let {...result}=results;
             // let {...field}=fields;
-            downEvent.emit('getDown',result,fields)
+            downEvent.emit('getDown',result)
         }
     })
  
