@@ -9,7 +9,7 @@ module.exports=async (req,res)=>{
         key:req.keys.privateKey,
         padding:crypto.constants.RSA_PKCS1_OAEP_PADDING,
         oaepHash:"sha256"
-    },req.body.pwd).toString()
+    },Buffer.from(req.body.pwd)).toString()
     try{
         let da={
             pwd,

@@ -5,7 +5,7 @@ const crypto=require('crypto')
 //获得admin的数据
 module.exports=async (req,res)=>{
     // //检查cookie
-    // if(req.cookies[isLogin]==true){
+    // if(req.cookies[isLogin]==true&&){
     //        async ()=>{
     //             await
     //         }
@@ -14,7 +14,7 @@ module.exports=async (req,res)=>{
         key:req.keys.privateKey,
         padding:crypto.constants.RSA_PKCS1_OAEP_PADDING,
         oaepHash:"sha256"
-    },req.body.pwd).toString()
+    },Buffer.from(req.body.pwd)).toString()
     try{
         let result=await getData(req.body.id,query.getUserById)
         //成功登录
@@ -26,7 +26,7 @@ module.exports=async (req,res)=>{
                 name:result.name,
                 create_time:result.create_time,
                 download_id:result.download_id, //最近下载的一个user_log id
-                creat_id:result.create_time,    //最近创建的一个user_log id
+                creat_id:result.create_id,    //最近创建的一个user_log id
                 download_total:result.download_total,
                 create_total:result.create_total
             }})

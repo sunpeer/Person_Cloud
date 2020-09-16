@@ -332,10 +332,10 @@ async function download_file_transaction(data,downEvent){
                         return
                     })
                 }else{
-                    let file_id=results.insertId
+                    let log_id=results.insertId
                     CRUD.updateOpr('file_table',{file_download_history:results.insertId,download_total:data.download_file_download_total+1},data.file_id,connection,(error,results,fields)=>{
                         if(error){
-                            console.error("在user_log_table写入'创建文件'失败")
+                            console.error("在file_table更新下载失败")
                             connection.rollback(()=>{
                                 connection.release()
                                 let {...eValue}=error
@@ -343,7 +343,7 @@ async function download_file_transaction(data,downEvent){
                                 return
                             })
                         }else{
-                            CRUD.insertOpr('user_log_table',{last_id:data.file_download_user_log,log_id:file_id},connection,(error,results,fields)=>{
+                            CRUD.insertOpr('user_log_table',{last_id:data.file_download_user_log,log_id:log_id},connection,(error,results,fields)=>{
                                 if(error){
                                     console.error("在user_log_table写入'创建文件'失败")
                                     connection.rollback(()=>{
@@ -353,7 +353,7 @@ async function download_file_transaction(data,downEvent){
                                         return
                                     })
                                 }else{
-                                    CRUD.updateOpr('user_table',{download_id:results.insertId,download_total:data.user_download_total},data.userId,connection,(error,reslts,fields)=>{
+                                    CRUD.updateOpr('user_table',{download_id:results.insertId,download_total:data.user_download_total},data.user_id,connection,(error,reslts,fields)=>{
                                         if(error){
                                             console.error("更新user_table下载历史失败")
                                             connection.rollback(()=>{

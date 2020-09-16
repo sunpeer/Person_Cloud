@@ -1,11 +1,12 @@
-const getData=require('../getdata')
 const transcations = require('../transcations')
 const dateNow=require('../date_now')
 const getdata = require('../getdata')
+const query=require('../query')
+const fs=require('fs')
 
 module.exports=async (req,res)=>{
     //根据cookie值判断用户是否登录
-    if(req.cookies[loginId]==req.body.userid){
+    if(req.cookies['loginId']==req.body.userid){
         try{
             let data={
                 file_id:req.body.file_id,
@@ -15,15 +16,30 @@ module.exports=async (req,res)=>{
                     file_id:req.body.file_id,
                     A:dateNow(),
                     E:req.body.userid,
-                    last_id:req.body.last_id
+                    last_id:req.body.last_id||null
                 },
                 download_file_download_total:req.body.download_file_download_total,
-                file_download_user_log:req.body.file_download_user_log,
+                file_download_user_log:req.body.file_download_user_log||null,
                 user_download_total:req.body.user_download_total
             }
-            let result=getdata(data,transcations.download_file_transaction)
-            console.log('[OK]',decodeURIComponent(req.originalUrl))
-            res.send({result:'OK'})
+            let result=await getdata(data,transcations.download_file_transaction)
+            //访问数据库得到文件路径
+            let ids=[]
+            ids.push(req.body.file_id)
+            result=await getdata(ids,query.getFileByIds)
+            let fullFileName=result[0][0].file_path
+            console.log('[OK]',decodeURIComponent(req.originalUrl),fullFileName)
+            // res.send({result:'OK'})
+            // let fileName=fullFileName.split('\\').pop()
+            res.sendFile(fullFileName,{
+                headers:{'Content-Disposition':"attachment"}
+            })
+            // let load=fs.createReadStream(result[0][0].file_path)
+            // res.writeHead(200,{
+            //     'Content-Type':'application/force-download',
+            //     'Content-Disposition':'attachment'
+            // })
+            // load.pipe(res)
         }catch(error){
             console.log('[ERR]',decodeURIComponent(req.originalUrl),error)
             res.status(500).send({result:'NG'})

@@ -1,12 +1,11 @@
 const events=require('events');
-const query= require('express');
 
 module.exports=function getData(){
     let arg=arguments;
-    let arg_len=arguments.length();
+    let arg_len=arguments.length;
     return new Promise(
         (resolve,reject)=>{
-            let myEvent=events.EventEmitter();
+            let myEvent=new events.EventEmitter();
             myEvent.on('getDown',(result,field)=>{
                 resolve(result)
             })

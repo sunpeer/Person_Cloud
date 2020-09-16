@@ -363,7 +363,8 @@ async function searchFileByCapital(Capital,downEvent){
 
 
 //得到所有的文件id
-async function searchFile(downEvent){
+
+async function searchFile(fileName,downEvent){
     let connection;
     try{
         connection = await connectHandler() // 得到链接
@@ -373,8 +374,8 @@ async function searchFile(downEvent){
         downEvent.emit('error',eValue)
         return
     }
-
-    CRUD.queryBycondition('id','file_table','',connection,(error,results,fields)=>{
+    let cond=fileName==''?'':`where file_name='${fileName}'`
+    CRUD.queryBycondition('id','file_table',cond,connection,(error,results,fields)=>{
         if(error){
             console.error('获取文件ID失败')
             connection.release()
