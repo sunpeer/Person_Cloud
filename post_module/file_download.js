@@ -16,10 +16,10 @@ module.exports=async (req,res)=>{
                     file_id:req.body.file_id,
                     A:dateNow(),
                     E:req.body.userid,
-                    last_id:req.body.last_id||null //这个代表这个用户的最近一次下载
+                    last_id:req.body.last_id||null //这个代表这个文件的最近一次下载
                 },
                 download_file_download_total:req.body.download_file_download_total, //这个代表这个文件的下载量
-                file_download_user_log:req.body.file_download_user_log||null,   //这个代表这个文件最近的下载
+                file_download_user_log:req.body.file_download_user_log||null,   //这个代表这个用户的最近下载
                 user_download_total:req.body.user_download_total    //这个代表用户的下载数
             }
             let result=await getdata(data,transcations.download_file_transaction)

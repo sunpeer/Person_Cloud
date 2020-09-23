@@ -353,7 +353,7 @@ async function download_file_transaction(data,downEvent){
                                         return
                                     })
                                 }else{
-                                    CRUD.updateOpr('user_table',{download_id:results.insertId,download_total:data.user_download_total},data.user_id,connection,(error,reslts,fields)=>{
+                                    CRUD.updateOpr('user_table',{download_id:results.insertId,download_total:parseInt(data.user_download_total)+1},data.user_id,connection,(error,reslts,fields)=>{
                                         if(error){
                                             console.error("更新user_table下载历史失败")
                                             connection.rollback(()=>{
