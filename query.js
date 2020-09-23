@@ -174,7 +174,7 @@ async function getAdminDownWork(startId,count,downEvent){
     }
     let searchCount=0;
     function getFile(id,datas,downEvent){
-        CRUD.queryByIndex('admin_log_table',['last_id','log_id'],startId,connection,(error,results,fields)=>{
+        CRUD.queryByIndex('admin_log_table',['last_id','log_id'],id,connection,(error,results,fields)=>{
             if(error){
                 console.error(`获得admin_log_table的id=${id}的记录失败,已查询${searchCount}`)
                 connection.release();
@@ -442,7 +442,7 @@ async function searhFileByKey(keys,downEvent){
     let cond=`where find_in_set('${keys[0]}',keywords)`
     let count=1;
     while(count<keys.length){
-        cond+` and find_in_set('${keys[count]}',keywords)`
+        cond+=` and find_in_set('${keys[count]}',keywords)`
         count++;
     }
     CRUD.queryBycondition('id','file_table',cond,connection,(error,results,fields)=>{

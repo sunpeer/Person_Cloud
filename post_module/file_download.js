@@ -16,11 +16,11 @@ module.exports=async (req,res)=>{
                     file_id:req.body.file_id,
                     A:dateNow(),
                     E:req.body.userid,
-                    last_id:req.body.last_id||null
+                    last_id:req.body.last_id||null //这个代表这个用户的最近一次下载
                 },
-                download_file_download_total:req.body.download_file_download_total,
-                file_download_user_log:req.body.file_download_user_log||null,
-                user_download_total:req.body.user_download_total
+                download_file_download_total:req.body.download_file_download_total, //这个代表这个文件的下载量
+                file_download_user_log:req.body.file_download_user_log||null,   //这个代表这个文件最近的下载
+                user_download_total:req.body.user_download_total    //这个代表用户的下载数
             }
             let result=await getdata(data,transcations.download_file_transaction)
             //访问数据库得到文件路径
@@ -31,7 +31,7 @@ module.exports=async (req,res)=>{
             console.log('[OK]',decodeURIComponent(req.originalUrl),fullFileName)
             // res.send({result:'OK'})
             // let fileName=fullFileName.split('\\').pop()
-            res.sendFile(fullFileName,{
+            res.sendFile(fullFileName+'.zip',{
                 headers:{'Content-Disposition':"attachment"}
             })
             // let load=fs.createReadStream(result[0][0].file_path)

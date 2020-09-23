@@ -3,8 +3,7 @@ const events=require('events');
 module.exports=function getData(){
     let arg=arguments;
     let arg_len=arguments.length;
-    return new Promise(
-        (resolve,reject)=>{
+    return new Promise(function(resolve,reject){
             let myEvent=new events.EventEmitter();
             myEvent.on('getDown',(result,field)=>{
                 resolve(result)

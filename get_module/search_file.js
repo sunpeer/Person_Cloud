@@ -16,13 +16,13 @@ module.exports=async (req,res)=>{
     //type='type1',capital='A',keyword=['keyword1','keyword2',...]'
     try{
         let result=[]
-        if(req.query.type!==undefined&&req.query.capital===undefined&&req.query.keyword===undefined){
+        if(req.query.type!=undefined&&req.query.capital==undefined&&req.query.keyword===undefined){
             result=await getData(req.query.type,query.searchFileByType)
-        }else if(req.query.type!==undefined&&req.query.capital!==undefined&&req.query.keyword===undefined){
+        }else if(req.query.type!=undefined&&req.query.capital!==undefined&&req.query.keyword===undefined){
             result= await getData(req.query.capital,req.query.type,query.searchFileByCT)
-        }else if(req.query.type!==undefined&&req.query.capital!==undefined&&req.query.keyword!==undefined){
+        }else if(req.query.type!=undefined&&req.query.capital!==undefined&&req.query.keyword!==undefined){
             result=await getData(req.query.capital,req.quey.type,req.query.keyword,searchFileByCTK)
-        }else if(req.query.type!==undefined&&req.query.capital===undefined&&req.query.keyword!==undefined){
+        }else if(req.query.type!=undefined&&req.query.capital===undefined&&req.query.keyword!==undefined){
             result =await getData(req.query.type,req.query.keyword,query.searchFileByTK)
         }else if(req.query.type===undefined&&req.query.keyword!==undefined&&req.query.capital!==undefined){
             result =await getData(req.query.capital,req.query.keyword,query.searchFileByCK)
@@ -30,10 +30,13 @@ module.exports=async (req,res)=>{
             result=await getdata(req.query.capital,query.searchFileByCapital)
         }else if(req.query.type===undefined&&req.query.keyword!==undefined&&req.query.capital===undefined){
             result=await getdata(req.query.keyword,query.searhFileByKey)
+        }else{
+            //没有一个条件
+            result=await getData('',query.searchFile)
         }
         console.log('[OK]',decodeURIComponent(req.originalUrl))
         let ids=[]
-        result.foreach((item)=>{
+        result.forEach((item)=>{
             ids.push(item.id)
         })
         res.send({result:'OK',data:{ids}})

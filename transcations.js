@@ -75,7 +75,7 @@ async function create_file_transcation(data,downEvent){
                                                 return
                                             })
                                         }else{
-                                            CRUD.updateOpr("user_table",{create_id:results.insertId,create_total:data.create_file_user_create_total+1},userID,connection,(error,results,fields)=>{
+                                            CRUD.updateOpr("user_table",{create_id:results.insertId,create_total:parseInt(data.create_file_user_create_total)+1},userID,connection,(error,results,fields)=>{
                                                 if(error){
                                                     console.error("在user_log_table写入'创建文件'失败")
                                                     connection.rollback(()=>{
@@ -191,7 +191,7 @@ async function create_file_confirm_transaction(data,downEvent){
                                         return
                                     })
                                 }else{
-                                    CRUD.updateOpr('admin_table',{work_id:results.insertId,work_total:data.create_confirm_admin_work_total+1},data.adminId,connection,(error,results,fields)=>{
+                                    CRUD.updateOpr('admin_table',{work_id:results.insertId,work_total:parseInt(data.create_confirm_admin_work_total)+1},data.adminId,connection,(error,results,fields)=>{
                                         if(error){
                                             console.error("更新admin_table失败")
                                             connection.rollback(()=>{
@@ -333,12 +333,12 @@ async function download_file_transaction(data,downEvent){
                     })
                 }else{
                     let log_id=results.insertId
-                    CRUD.updateOpr('file_table',{file_download_history:results.insertId,download_total:data.download_file_download_total+1},data.file_id,connection,(error,results,fields)=>{
+                    CRUD.updateOpr('file_table',{file_download_history:results.insertId,download_total:parseInt(data.download_file_download_total)+1},data.file_id,connection,(error,results,fields)=>{
                         if(error){
                             console.error("在file_table更新下载失败")
                             connection.rollback(()=>{
                                 connection.release()
-                                let {...eValue}=error
+                                let {...eValue}=error  
                                 downEvent.emit('error',eValue)
                                 return
                             })

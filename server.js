@@ -14,13 +14,11 @@ const {publicKey,privateKey}=crypto.generateKeyPairSync('rsa',{
     privateKeyEncoding: {
         type: 'pkcs8',
         format: 'pem',
-        // cipher: 'aes-256-cbc',
-        // passphrase: 'top secret'
     }
 })
 var storage=multer.diskStorage({
     destination:function(req,file,cb){
-        cb(null,'E:/personal_Cloud_Zip_Dir')
+        cb(null,'E:/personal_Cloud_Origin_Dir')
     },
     filename:function(req,file,cb){
         cb(null,req.query.file_name)
@@ -45,7 +43,8 @@ app.all('*',function(req, res, next) {//处理跨域
 	res.header("Access-Control-Allow-Credentials",true);
 	res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
 	// res.header("X-Powered-By",' 3.2.1');
-	// res.header("Content-Type","*/*");  /**/
+    // res.header("Content-Type","*/*");  /**/
+    res.header('Access-Control-Allow-Headers','content-type')
     req.method === 'OPTIONS' ? res.status(204).end() : next()
   })
 
@@ -83,7 +82,7 @@ fs.readdirSync(path.join(__dirname, 'post_module')).forEach(file=>{
 })
 
 fs.readdirSync(path.join(__dirname, 'get_module')).forEach(file=>{
-    let route=file.replace(/_/g,'/')
+    let route='/'+file.replace(/\.js$/i, '').replace(/_/g,'/')
     let question=require(path.join(__dirname, 'get_module',file))
 
     app.get(route,question)

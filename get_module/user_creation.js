@@ -3,7 +3,7 @@ const query=require('../query')
 
 module.exports=async (req,res)=>{
     let id=req.query.id
-    let count=req.query.cout||0
+    let count=req.query.count||0
     try{
         let result=await getData(id,count,query.getUserCreationData)
         console.log('[OK]',decodeURIComponent(req.originalUrl))

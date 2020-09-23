@@ -8,7 +8,7 @@ module.exports=async (req,res)=>{
         let result=await getdata(count,query.getAdminWork)
         console.log('[OK]',decodeURIComponent(req.originalUrl))
         let ids=[]
-        result.foreach((item)=>{
+        result.forEach((item)=>{
             ids.push(item.id)
         })
         res.send({result:'OK',data:{ids}})

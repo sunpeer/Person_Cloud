@@ -10,17 +10,20 @@ module.exports=async (req,res)=>{
     //             await
     //         }
     // }
-    let pwd=crypto.privateDecrypt({
-        key:req.keys.privateKey,
-        padding:crypto.constants.RSA_PKCS1_OAEP_PADDING,
-        oaepHash:"sha256"
-    },Buffer.from(req.body.pwd)).toString()
+    // let pwd=crypto.privateDecrypt({
+    //     key:req.keys.privateKey,
+    //     padding:crypto.constants.RSA_PKCS1_OAEP_PADDING,
+    //     oaepHash:"sha256"
+    // },Buffer.from(req.body.pwd)).toString()
+    let pwd=req.body.pwd
     try{
         let result=await getData(req.body.id,query.getUserById)
         //成功登录
         if(result.pwd==pwd){
             console.log('[OK]', decodeURIComponent(req.originalUrl))
-            res.append('Set-Cookie', `loginId=${req.body.id};isLogin=true`)
+            var date=new Date();
+            date.setMonth(date.getMonth()+1)
+            res.append('Set-Cookie', `loginId=${req.body.id};Path=/;expires=${date.toUTCString()}`)
             res.send({result:'OK',data:{
                 id:result.id,
                 name:result.name,

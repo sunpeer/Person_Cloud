@@ -22,7 +22,7 @@ module.exports=async (req,res)=>{
                     size:req.file.size,
                     keywords:req.body.keywords, //'keywords1,keywords2,keywords3'
                     state:"creating",
-                    file_path:req.file.path,
+                    file_path:req.file.path.replace('_Origin_','_Zip_'),
                     file_owner:req.body.userid,
                     file_desc:req.body.file_desc
                 }
@@ -35,7 +35,8 @@ module.exports=async (req,res)=>{
                         B:querystring.stringify(create_file),
                         E:req.body.userid
                     },
-                    create_file_user_log_last_id:req.body.create_file_user_log_last_id||null,
+                    //这个值有可能要存储为null，这样的话前后台传数据不知如何处理啊
+                    create_file_user_log_last_id:req.body.create_file_user_log_last_id=='null'?null:req.body.create_file_user_log_last_id,
                     create_file_user_create_total:req.body.create_total
                 }
                 let result=await getdata(data,transcation.create_file_transcation)
